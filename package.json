@@ -1,0 +1,11 @@
+{
+  "name": "infinits-park-webgl",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Tugas 2 Grafika Komputer: scene InfinITS Park dengan WebGL murni",
+  "scripts": {
+    "dev": "python3 serve.py",
+    "test": "node --test tests/*.test.js"
+  }
+}

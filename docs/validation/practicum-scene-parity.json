@@ -1,0 +1,15 @@
+{
+  "before": {
+    "nodes": 1922,
+    "sha256": "2da675248c28e9bfde7b5d32bada7cfa139246d92b16ea2d8b564f1ff3c5aa0a"
+  },
+  "after": {
+    "nodes": 1922,
+    "sha256": "2da675248c28e9bfde7b5d32bada7cfa139246d92b16ea2d8b564f1ff3c5aa0a"
+  },
+  "identical": true,
+  "animation": {
+    "timeSeconds": 3.25,
+    "windStrength": 1
+  }
+}

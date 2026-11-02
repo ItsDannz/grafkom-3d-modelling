@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="id"><meta charset="utf-8"><title>Uji GPU WebGL InfinITS</title>
+<style>body{margin:20px;background:#eee;font:16px system-ui}canvas{display:block;width:800px;max-width:100%;height:500px}pre{white-space:pre-wrap}</style>
+<h1>Uji shader, shadow map, dan refleksi</h1>
+<canvas id="gpu"></canvas><pre id="qaStatus">Menyiapkan GPU…</pre>
+<script type="module">
+import {createNode} from '../hierarchy.js';
+import {createRenderer} from '../renderer.js';
+import {SITE_LEVELS} from '../js/site-levels.js';
+const canvas=document.getElementById('gpu'),output=document.getElementById('qaStatus');
+if(new URLSearchParams(location.search).get('webgl')==='1') {
+  const original=canvas.getContext.bind(canvas);
+  canvas.getContext=(name,options)=>name==='webgl2'?null:original(name,options);
+}
+try {
+  const renderer=createRenderer(canvas),root=createNode('GPU smoke scene');
+  root.add(createNode('Ground',{mesh:'plane',position:[0,SITE_LEVELS.bed,0],scale:[22,1,22],material:{color:[.5,.55,.35,1],texture:'grass'}}));
+  root.add(createNode('Water',{mesh:'plane',position:[0,SITE_LEVELS.water,0],scale:[10,1,8],material:{color:[.22,.24,.14,1],water:true,texture:'water',shininess:90}}));
+  root.add(createNode('Cube',{mesh:'box',position:[-3,1.5,-5],scale:[2,3,2],material:{color:[.65,.5,.32,1],texture:'bark'}}));
+  root.add(createNode('Leaves',{mesh:'sphere',position:[-3,4,-5],scale:[4,2,4],material:{color:[.25,.44,.15,1],texture:'leaf',foliage:true}}));
+  const camera={eye:[12,8,17],target:[0,1,0],fov:48,near:.15,far:220};
+  if(new URLSearchParams(location.search).get('projection')==='orthographic')Object.assign(camera,{projection:'orthographic',orthoSpan:28});
+  let frames=0;
+  function draw(now) {
+    try {
+    renderer.render(root,camera,{time:now/1000,lighting:true,textures:true,shadows:true,reflections:true,sunElevation:42});
+    const error=renderer.gl.getError();
+    if(error!==renderer.gl.NO_ERROR)throw new Error(`WebGL error ${error}`);
+    if(++frames<5)requestAnimationFrame(draw);
+    else {
+      output.textContent='PASS '+JSON.stringify({version:renderer.stats.webglVersion,projection:camera.projection||'perspective',features:renderer.features,frames,glError:error});
+      output.dataset.result='pass';
+    }
+    } catch(error) {output.textContent='FAIL '+error.message;output.dataset.result='fail';console.error(error);}
+  }
+  requestAnimationFrame(draw);
+} catch(error) {output.textContent='FAIL '+error.message;output.dataset.result='fail';console.error(error);}
+</script></html>
