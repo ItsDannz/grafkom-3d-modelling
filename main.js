@@ -38,7 +38,7 @@ function choosePreset(id, immediate = false) {
   if(activeCamera)activeCamera.projection=preset.projection;
   setGroundVisible(!preset.inspect);
   setTour(false);
-  // Tampilan ukur harus langsung sejajar sumbu; perspektif tetap bertransisi.
+  // Tampilan ukur harus langsung sejajar sumbu; perspektif tetap bertransisi
   if (immediate || preset.projection === 'orthographic') { activeCamera = next; destination = null; }
   else {
     // Ambil busur terpendek saat perpindahan kamera melewati ±π.
@@ -162,7 +162,7 @@ function capture() {
   }, 'image/png');
 }
 
-// 3. KONTROL: input event mengubah state yang dibaca tiap frame.
+// 3. KONTROL: input event mengubah state yang dibaca tiap frame
 function setupParameters() {
   for (const id of ['sunElevation', 'windStrength', 'waterStrength', 'animationSpeed']) {
     const input = $(id);
@@ -193,6 +193,7 @@ function setupMedia() {
     const start = select.options.length;
     items.forEach((item, index) => select.add(new Option(`${start + index + 1}. ${item.label} · ${item.name}`, item.id)));
   }
+  
   function show(kind) {
     const isPhoto = kind === 'reference';
     const items = isPhoto ? photos : videos;
@@ -207,6 +208,7 @@ function setupMedia() {
       button.setAttribute('aria-pressed', String(active));
     });
   }
+  
   fillSelect('referenceSelect', photos); fillSelect('videoSelect', videos);
   $('referenceSelect').addEventListener('change', () => show('reference'));
   $('videoSelect').addEventListener('change', () => show('video'));
@@ -221,6 +223,7 @@ function setupMedia() {
     button.addEventListener('click', () => { $('referenceSelect').value = media.id; show('reference'); });
     $('mediaThumbs').append(button);
   }
+  
   show('reference'); show('video');
   $('localMediaInput')?.addEventListener('change', event => {
     let count = 0;
@@ -288,7 +291,7 @@ function update(delta) {
   scene.update(state.time, state);
 }
 
-// 5. INIT: siapkan scene, renderer, kontrol dan mulai requestAnimationFrame.
+// 5. INIT: siapkan scene, renderer, kontrol dan mulai requestAnimationFrame
 function init() {
   setupMedia(); setupTeam(); setupParameters();
   try {
@@ -318,7 +321,8 @@ function init() {
     return;
   }
   let previous = performance.now(), fpsStarted = previous, frames = 0;
-  // 6. RENDER: delta time → update → draw → frame berikutnya.
+  
+  // 6. RENDER: delta time → update → draw → frame berikutnya
   function render(now) {
     const delta = Math.min((now - previous) / 1000, .05); previous = now;
     update(delta);
